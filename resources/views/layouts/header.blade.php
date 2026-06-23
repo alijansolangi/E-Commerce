@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="adminHMD professional admin dashboard template">
-    <title>@yield('title', 'Dashboard | adminHMD')</title>
+    <meta name="description" content="E-commerce professional admin dashboard template">
+    
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">
@@ -26,23 +26,23 @@
         <!-- ============================================ -->
         <aside class="admin-sidebar" id="adminSidebar" aria-label="Main navigation">
             <div class="sidebar-header">
-                <a class="brand-mark" href="#" aria-label="adminHMD dashboard">
+                <a class="brand-mark" href="#" aria-label="E-commerce dashboard">
                     <span class="brand-icon"><i class="bi bi-grid-1x2-fill" aria-hidden="true"></i></span>
                     <span class="brand-copy">
-                        <span class="brand-title">adminHMD</span>
-                        <span class="brand-subtitle">Admin Template</span>
+                        <span class="brand-title">E-commerce</span>
+                        <span class="brand-subtitle">Admin Store</span>
                     </span>
                 </a>
             </div>
 
             <nav class="sidebar-nav">
-                <a class="nav-link active" href="#" aria-current="page">
+                <a class="nav-link active" href="/" aria-current="page">
                     <span class="nav-icon"><i class="bi bi-speedometer2" aria-hidden="true"></i></span>
                     <span class="nav-text">Dashboard</span>
                 </a>
-                <a class="nav-link" href="#">
+                <a class="nav-link" href="{{ route('category.index') }}">
                     <span class="nav-icon"><i class="bi bi-people" aria-hidden="true"></i></span>
-                    <span class="nav-text">Users</span>
+                    <span class="nav-text">Category</span>
                 </a>
                 <a class="nav-link" href="#">
                     <span class="nav-icon"><i class="bi bi-person-plus" aria-hidden="true"></i></span>
@@ -131,14 +131,14 @@
 
                         <div class="dropdown">
                             <button class="profile-button dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <img class="avatar-img avatar-sm" src="{{ asset('assets/images/avatar/avatar.jpg') }}" alt="Admin Hasan">
-                                <span class="profile-name d-none d-sm-inline">Admin Hasan</span>
+                                <img class="avatar-img avatar-sm" src="{{ asset('assets/images/avatar/avatar.jpg') }}" alt="Admin">
+                                <span class="profile-name d-none d-sm-inline">Admin</span>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end">
                                 <li><a class="dropdown-item" href="#">Profile</a></li>
                                 <li><a class="dropdown-item" href="#">Account settings</a></li>
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="#">Sign out</a></li>
+                                <li><a class="dropdown-item" href=" {{ route('logout'); }}">Sign out</a></li>
                             </ul>
                         </div>
                     </div>

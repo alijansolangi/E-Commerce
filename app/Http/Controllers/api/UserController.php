@@ -7,10 +7,11 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
-    
+
     /**
      * Handle user registration.
      */
@@ -91,6 +92,48 @@ class UserController extends Controller
         ], 200);
     }
 
+
+    //AdminLogin Function
+
+    public function AdminLogin(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required|min:6',
+        ]);
+
+        $credentials = $request->only('email', 'password');
+
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
+
+            // 🔥 Check role and redirect
+            $user = Auth::user();
+
+            if ($user->role == "admin") {
+                return redirect()->route('dashboard')->with('success', 'Welcome Admin!');
+            } else {
+                Auth::logout();
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+                return redirect()->route('login')->withErrors([
+            'email' => 'The provided credentials do not match our records.',
+        ])->onlyInput('email');
+            }
+        }
+
+        return back()->withErrors([
+            'email' => 'The provided credentials do not match our records.',
+        ])->onlyInput('email');
+    }
+    public function Adminlogout(Request $request)
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return redirect('/');
+    }
+
     /**
      * Handle user logout (Revoke token).
      */
@@ -105,11 +148,10 @@ class UserController extends Controller
         ], 200);
     }
 
-        public function profile(Request $request)
+    public function profile(Request $request)
     {
         return response()->json([
             'user' => $request->user()
         ]);
     }
-
 }
