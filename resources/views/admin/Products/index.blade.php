@@ -87,25 +87,22 @@
                                 @endif
                             </td>
                             <td>
-                                <div class="btn-group btn-group-sm" role="group">
-                                    <a href="{{ route('products.show', $product->id) }}" 
-                                       class="btn btn-info text-white" 
-                                       title="View">
-                                        <i class="fas fa-eye"></i>
-                                    </a>
+                                <div class="d-flex gap-1">
+                                    <!-- Edit Button -->
                                     <a href="{{ route('products.edit', $product->id) }}" 
-                                       class="btn btn-warning text-white" 
-                                       title="Edit">
-                                        <i class="fas fa-edit"></i>
+                                       class="btn btn-warning btn-sm text-white">
+                                        <i class="fas fa-edit me-1"></i> Edit
                                     </a>
+                                    
+                                    <!-- Delete Button -->
                                     <form action="{{ route('products.destroy', $product->id) }}" 
                                           method="POST" 
                                           style="display:inline-block;"
                                           onsubmit="return confirm('Are you sure you want to delete this product?')">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-danger" title="Delete">
-                                            <i class="fas fa-trash"></i>
+                                        <button type="submit" class="btn btn-danger btn-sm">
+                                            <i class="fas fa-trash me-1"></i> Delete
                                         </button>
                                     </form>
                                 </div>

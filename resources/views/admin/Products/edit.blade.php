@@ -1,6 +1,6 @@
 @extends('layouts.header')
 @section('content')
-<title>@yield('title', 'Edit Category | E-commerce')</title>
+<title>@yield('title', 'Edit Product | E-commerce')</title>
 
 <div class="container mt-4">
     {{-- Success Alert --}}
@@ -33,49 +33,187 @@
     @endif
 
     <div class="row justify-content-center">
-        <div class="col-md-8 col-lg-6">
+        <div class="col-12 col-xl-8">
             <div class="card shadow-sm">
                 <div class="card-header bg-white d-flex justify-content-between align-items-center">
-                    <h4 class="mb-0">Edit Category</h4>
-                    <a class="btn btn-secondary btn-sm" href="{{ route('category.index') }}">Back</a>
+                    <div>
+                        <h2 class="h5 mb-1 section-title">
+                            <i class="bi bi-pencil-square" aria-hidden="true"></i>
+                            <span>Edit Product</span>
+                        </h2>
+                        <p class="text-muted mb-0">Update the product details.</p>
+                    </div>
+                    <a class="btn btn-secondary btn-sm" href="{{ route('products.index') }}">
+                        <i class="bi bi-arrow-left"></i> Back
+                    </a>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('category.update', $category->id) }}" method="POST">
+                    <form action="{{ route('products.update', $product->id) }}" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
                         @csrf
                         @method('PUT')
                         
-                        <!-- Name input -->
-                        <div class="form-group mb-3">
-                            <label for="name" class="form-label fw-bold">Category Name <span class="text-danger">*</span></label>
-                            <input type="text" id="name" name="name" 
-                                   class="form-control @error('name') is-invalid @enderror" 
-                                   placeholder="Enter category name"
-                                   value="{{ old('name', $category->name) }}"
-                                   required>
-                            @error('name')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+                        <div class="row g-3">
+                            <!-- Product Name -->
+                            <div class="col-md-6">
+                                <label class="form-label" for="name">
+                                    Product Name <span class="text-danger">*</span>
+                                </label>
+                                <input class="form-control @error('name') is-invalid @enderror" 
+                                       id="name" 
+                                       name="name" 
+                                       type="text" 
+                                       placeholder="Enter product name"
+                                       value="{{ old('name', $product->name) }}"
+                                       required>
+                                @error('name')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <!-- Slug -->
+                            <div class="col-md-6">
+                                <label class="form-label" for="slug">
+                                    Slug <span class="text-danger">*</span>
+                                </label>
+                                <input class="form-control @error('slug') is-invalid @enderror" 
+                                       id="slug" 
+                                       name="slug" 
+                                       type="text" 
+                                       placeholder="e.g., electronic-gadgets"
+                                       value="{{ old('slug', $product->slug) }}"
+                                       required>
+                                <small class="text-muted">Use lowercase letters, numbers, and hyphens only.</small>
+                                @error('slug')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <!-- Category -->
+                            <div class="col-md-6">
+                                <label class="form-label" for="category_id">
+                                    Category <span class="text-danger">*</span>
+                                </label>
+                                <select class="form-select @error('category_id') is-invalid @enderror" 
+                                        id="category_id" 
+                                        name="category_id" 
+                                        required>
+                                    <option value="">Select Category</option>
+                                    @foreach($categories as $category)
+                                        <option value="{{ $category->id }}" 
+                                            {{ old('category_id', $product->category_id) == $category->id ? 'selected' : '' }}>
+                                            {{ $category->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('category_id')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <!-- Price -->
+                            <div class="col-md-6">
+                                <label class="form-label" for="price">
+                                    Price ($) <span class="text-danger">*</span>
+                                </label>
+                                <input class="form-control @error('price') is-invalid @enderror" 
+                                       id="price" 
+                                       name="price" 
+                                       type="number" 
+                                       step="0.01" 
+                                       min="0"
+                                       placeholder="0.00"
+                                       value="{{ old('price', $product->price) }}"
+                                       required>
+                                @error('price')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <!-- Stock -->
+                            <div class="col-md-6">
+                                <label class="form-label" for="stock">
+                                    Stock Quantity <span class="text-danger">*</span>
+                                </label>
+                                <input class="form-control @error('stock') is-invalid @enderror" 
+                                       id="stock" 
+                                       name="stock" 
+                                       type="number" 
+                                       min="0"
+                                       placeholder="0"
+                                       value="{{ old('stock', $product->stock) }}"
+                                       required>
+                                @error('stock')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <!-- Status -->
+                            <div class="col-md-6">
+                                <label class="form-label" for="status">
+                                    Status <span class="text-danger">*</span>
+                                </label>
+                                <select class="form-select @error('status') is-invalid @enderror" 
+                                        id="status" 
+                                        name="status" 
+                                        required>
+                                    <option value="">Select Status</option>
+                                    <option value="active" {{ old('status', $product->status) == 'active' ? 'selected' : '' }}>Active</option>
+                                    <option value="inactive" {{ old('status', $product->status) == 'inactive' ? 'selected' : '' }}>Inactive</option>
+                                </select>
+                                @error('status')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <!-- Image -->
+                            <div class="col-12">
+                                <label class="form-label" for="image">Product Image</label>
+                                
+                                {{-- Current Image Preview --}}
+                                @if($product->image && file_exists(public_path('storage/' . $product->image)))
+                                    <div class="mb-2">
+                                        <img src="{{ asset('storage/' . $product->image) }}" 
+                                             alt="{{ $product->name }}" 
+                                             width="100" 
+                                             height="100" 
+                                             class="rounded border">
+                                        <br>
+                                        <small class="text-muted">Current Image</small>
+                                    </div>
+                                @endif
+                                
+                                <input class="form-control @error('image') is-invalid @enderror" 
+                                       id="image" 
+                                       name="image" 
+                                       type="file" 
+                                       accept="image/jpeg,image/png,image/jpg,image/gif">
+                                <small class="text-muted">Allowed: JPEG, PNG, JPG, GIF. Max size: 2MB. Leave empty to keep current image.</small>
+                                @error('image')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <!-- Description -->
+                            <div class="col-12">
+                                <label class="form-label" for="description">Description</label>
+                                <textarea class="form-control @error('description') is-invalid @enderror" 
+                                          id="description" 
+                                          name="description" 
+                                          rows="5" 
+                                          placeholder="Enter product description">{{ old('description', $product->description) }}</textarea>
+                                @error('description')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
                         </div>
 
-                        <!-- Slug input -->
-                        <div class="form-group mb-3">
-                            <label for="slug" class="form-label fw-bold">Category Slug <span class="text-danger">*</span></label>
-                            <input type="text" id="slug" name="slug" 
-                                   class="form-control @error('slug') is-invalid @enderror" 
-                                   placeholder="Enter category slug (e.g., electronic-gadgets)"
-                                   value="{{ old('slug', $category->slug) }}"
-                                   required>
-                            @error('slug')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                            <small class="text-muted">Slug will be used in URL. Use lowercase letters, numbers, and hyphens only.</small>
-                        </div>
-
-                        <!-- Submit Button -->
-                        <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
-                            <a href="{{ route('category.index') }}" class="btn btn-secondary me-md-2">Cancel</a>
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-edit me-1"></i> Update Category
+                        <!-- Submit Buttons -->
+                        <div class="d-flex justify-content-end gap-2 mt-4">
+                            <a href="{{ route('products.index') }}" class="btn btn-secondary">
+                                <i class="bi bi-x-circle"></i> Cancel
+                            </a>
+                            <button class="btn btn-primary" type="submit">
+                                <i class="bi bi-check-circle"></i> Update Product
                             </button>
                         </div>
                     </form>

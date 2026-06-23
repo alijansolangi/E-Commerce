@@ -17,7 +17,7 @@ class ProductController extends Controller
             ->latest()
             ->paginate(10);
 
-        return view('products.index', compact('products'));
+        return view('admin.Products.index', compact('products'));
     }
 
     /**
@@ -26,7 +26,7 @@ class ProductController extends Controller
     public function create()
     {
         $categories = Category::all();
-        return view('products.create', compact('categories'));
+        return view('admin.Products.create', compact('categories'));
     }
 
     /**
@@ -67,7 +67,7 @@ class ProductController extends Controller
     public function show(Product $product)
     {
         $product->load('category');
-        return view('products.show', compact('product'));
+        return view('admin.Products.show', compact('product'));
     }
 
     /**
@@ -76,7 +76,7 @@ class ProductController extends Controller
     public function edit(Product $product)
     {
         $categories = Category::all();
-        return view('products.edit', compact('product', 'categories'));
+        return view('admin.Products.edit', compact('product', 'categories'));
     }
 
     /**

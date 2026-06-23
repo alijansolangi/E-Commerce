@@ -44,9 +44,9 @@
                     <span class="nav-icon"><i class="bi bi-people" aria-hidden="true"></i></span>
                     <span class="nav-text">Category</span>
                 </a>
-                <a class="nav-link" href="#">
+                <a class="nav-link" href="{{ route('products.index'); }}">
                     <span class="nav-icon"><i class="bi bi-person-plus" aria-hidden="true"></i></span>
-                    <span class="nav-text">Add User</span>
+                    <span class="nav-text">Products</span>
                 </a>
                 <a class="nav-link" href="#">
                     <span class="nav-icon"><i class="bi bi-person-badge" aria-hidden="true"></i></span>
