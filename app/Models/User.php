@@ -36,10 +36,22 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-     public function isUser()
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
+
+    public function cart()
+    {
+        return $this->hasOne(Cart::class);
+    }
+
+    public function isUser()
     {
         return $this->role === 'user';
     }
+
+    
 
     /**
      * Get the attributes that should be cast.
