@@ -48,7 +48,7 @@
                     <span class="nav-icon"><i class="bi bi-person-plus" aria-hidden="true"></i></span>
                     <span class="nav-text">Products</span>
                 </a>
-                <a class="nav-link" href="#">
+                <a class="nav-link" href="{{ route('orders.index'); }}">
                     <span class="nav-icon"><i class="bi bi-person-badge" aria-hidden="true"></i></span>
                     <span class="nav-text">Profile</span>
                 </a>
@@ -108,35 +108,13 @@
                         </button>
 
                         <div class="dropdown">
-                            <button class="icon-button" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Notifications">
-                                <span class="notification-dot"></span>
-                                <i class="bi bi-bell" aria-hidden="true"></i>
-                            </button>
-                            <div class="dropdown-menu dropdown-menu-end notification-menu">
-                                <div class="dropdown-header fw-bold text-body">Notifications</div>
-                                <a class="dropdown-item" href="#">
-                                    <span class="notification-title">New user registered</span>
-                                    <span class="notification-time">4 minutes ago</span>
-                                </a>
-                                <a class="dropdown-item" href="#">
-                                    <span class="notification-title">Revenue target reached</span>
-                                    <span class="notification-time">32 minutes ago</span>
-                                </a>
-                                <a class="dropdown-item" href="#">
-                                    <span class="notification-title">Security review completed</span>
-                                    <span class="notification-time">1 hour ago</span>
-                                </a>
-                            </div>
-                        </div>
-
-                        <div class="dropdown">
                             <button class="profile-button dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <img class="avatar-img avatar-sm" src="{{ asset('assets/images/avatar/avatar.jpg') }}" alt="Admin">
-                                <span class="profile-name d-none d-sm-inline">Admin</span>
+                                {{-- <img class="avatar-img avatar-sm" src="{{ asset('assets/images/avatar/avatar.jpg') }}" alt="Admin"> --}}
+                                <span class="d-none d-sm-inline">Admin</span>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" href="#">Profile</a></li>
-                                <li><a class="dropdown-item" href="#">Account settings</a></li>
+                                {{-- <li><a class="dropdown-item" href="#">Profile</a></li>
+                                <li><a class="dropdown-item" href="#">Account settings</a></li> --}}
                                 <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item" href=" {{ route('logout'); }}">Sign out</a></li>
                             </ul>

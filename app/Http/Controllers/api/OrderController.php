@@ -59,4 +59,25 @@ class OrderController extends Controller
             'total' => $total
         ]);
     }
+    public function index(Request $request)
+    {
+        $orders = Order::where('user_id', $request->user()->id)
+            ->latest()
+            ->get();
+
+        return response()->json($orders);
+    }
+    public function show(Request $request, Order $order)
+    {
+        if ($order->user_id != $request->user()->id) {
+            return response()->json([
+                'message' => 'Unauthorized'
+            ], 403);
+        }
+
+        $order->load('items.product');
+
+        return response()->json($order);
+    }
+    
 }

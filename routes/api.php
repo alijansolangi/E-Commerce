@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\api\UserController;
 use App\Http\Controllers\api\CartController;
 use App\Http\Controllers\api\OrderController;
+use App\Http\Controllers\api\ProductController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -12,6 +13,9 @@ Route::get('/user', function (Request $request) {
 
 Route::post('login', [UserController::class, 'login']);
 Route::post('register', [UserController::class, 'register']);
+
+Route::get('/products',[ProductController::class,'index'])->name('products');
+Route::get('/products/{id}',[ProductController::class,'show'])->name('products');
 
 Route::middleware('auth:sanctum')->group(function () {
 
@@ -25,7 +29,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/cart/add', [CartController::class, 'add']);
     Route::get('/cart', [CartController::class, 'index']);
     Route::post('/checkout', [OrderController::class, 'checkout']);
-
-
-
+    Route::get('/orders', [OrderController::class, 'index']);
+    Route::get('/orders/{order}', [OrderController::class, 'show']);
 });
