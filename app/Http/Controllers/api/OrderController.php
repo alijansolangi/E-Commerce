@@ -24,6 +24,11 @@ class OrderController extends Controller
             ], 400);
         }
 
+        
+        foreach ($cart->items as $item) {
+    dd($item->product);
+}
+
         $total = 0;
 
         $order = Order::create([
@@ -68,7 +73,7 @@ class OrderController extends Controller
         return response()->json($orders);
     }
     public function show(Request $request, Order $order)
-    {
+0    {
         if ($order->user_id != $request->user()->id) {
             return response()->json([
                 'message' => 'Unauthorized'
@@ -79,5 +84,4 @@ class OrderController extends Controller
 
         return response()->json($order);
     }
-    
 }

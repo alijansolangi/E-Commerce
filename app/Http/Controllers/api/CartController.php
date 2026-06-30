@@ -53,6 +53,7 @@ class CartController extends Controller
     }
     public function add(Request $request)
     {
+        // dd($cart);
         $request->validate([
             'product_id' => 'required|exists:products,id',
             'quantity' => 'nullable|integer|min:1'
@@ -113,6 +114,53 @@ class CartController extends Controller
 
         return response()->json([
             'message' => 'Item removed from cart'
+        ]);
+    }
+
+    public function updateQuantity(Request $request, $id)
+    {
+        $request->validate([
+            'quantity' => 'required|integer|min:1'
+        ]);
+
+        $user = $request->user();
+
+        $cart = Cart::where('user_id', $user->id)->first();
+
+        if (!$cart) {
+            return response()->json([
+                'message' => 'Cart not found'
+            ], 404);
+        }
+
+        $item = CartItem::with('product')
+            ->where('id', $id)
+            ->where('cart_id', $cart->id)
+            ->first();
+
+        if (!$item) {
+            return response()->json([
+                'message' => 'Item not found'
+            ], 404);
+        }
+
+        // Stock check
+        if ($request->quantity > $item->product->stock) {
+            return response()->json([
+                'message' => 'Only ' . $item->product->stock . ' items are available in stock.'
+            ], 422);
+        }
+
+        $item->update([
+            'quantity' => $request->quantity
+        ]);
+
+        return response()->json([
+            'message' => 'Quantity updated successfully',
+            'item' => [
+                'id' => $item->id,
+                'quantity' => $item->quantity
+            ]
         ]);
     }
 }
