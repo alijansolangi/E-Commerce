@@ -6,6 +6,7 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Cart;
 use App\Http\Controllers\Controller;
+use App\Models\Product;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
@@ -14,55 +15,101 @@ class OrderController extends Controller
     {
         $user = $request->user();
 
+        // dd('Checkout Hit');
+
         $cart = Cart::where('user_id', $user->id)
             ->with('items.product')
             ->first();
 
-        if (!$cart || $cart->items->count() == 0) {
+        if (!$cart || $cart->items->isEmpty()) {
             return response()->json([
                 'message' => 'Cart is empty'
             ], 400);
         }
 
-        
-        foreach ($cart->items as $item) {
-    dd($item->product);
-}
+        // DB::beginTransaction();
 
-        $total = 0;
+        try {
 
-        $order = Order::create([
-            'user_id' => $user->id,
-            'total' => 0, // later update
-            'status' => 'pending'
-        ]);
+            $total = 0;
 
-        foreach ($cart->items as $item) {
+            // Stock Check
+            foreach ($cart->items as $item) {
+
+                if (!$item->product) {
+                    DB::rollBack();
+
+                    return response()->json([
+                        'message' => 'Product not found.'
+                    ], 404);
+                }
+
+                if ($item->quantity > $item->product->stock) {
+                    DB::rollBack();
+
+                    return response()->json([
+                        'message' => $item->product->name . ' has only ' . $item->product->stock . ' items available.'
+                    ], 422);
+                }
+            }
+
+            // Create Order
+            $order = Order::create([
+                'user_id' => $user->id,
+                'total' => 0,
+                'status' => 'pending'
+            ]);
+
+            // Save Order Items
+
 
             $price = $item->product->price;
             $subtotal = $price * $item->quantity;
 
             $total += $subtotal;
+            foreach ($cart->items as $item) {
 
-            OrderItem::create([
-                'order_id' => $order->id,
-                'product_id' => $item->product_id,
-                'quantity' => $item->quantity,
-                'price' => $price
+                OrderItem::create([
+                    'order_id' => $order->id,
+                    'product_id' => $item->product_id,
+                    'quantity' => $item->quantity,
+                    'price' => $price
+                ]);
+
+
+                // Reduce Stock
+                $item->product->decrement('stock', $item->quantity);
+            }
+
+            // Update Order Total
+            $order->update([
+                'total' => $total
             ]);
+
+            // return response()->json([
+            //     'user' => $total,
+            // ]);
+
+            // Clear Cart
+            $cart->items()->delete();
+
+            DB::commit();
+
+            return response()->json([
+                'message' => 'Order placed successfully',
+                'order_id' => $order->id,
+                'total' => $total,
+                'status' => $order->status
+            ], 201);
+        } catch (\Exception $e) {
+
+            DB::rollBack();
+
+            return response()->json([
+                'message' => 'Checkout failed',
+                'error' => $e->getMessage()
+            ], 500);
         }
-
-        $order->update([
-            'total' => $total
-        ]);
-
-        $cart->items()->delete();
-
-        return response()->json([
-            'message' => 'Order placed successfully',
-            'order_id' => $order->id,
-            'total' => $total
-        ]);
     }
     public function index(Request $request)
     {
@@ -73,7 +120,7 @@ class OrderController extends Controller
         return response()->json($orders);
     }
     public function show(Request $request, Order $order)
-0    {
+    {
         if ($order->user_id != $request->user()->id) {
             return response()->json([
                 'message' => 'Unauthorized'

@@ -6,6 +6,7 @@ use App\Http\Controllers\api\UserController;
 use App\Http\Controllers\api\CartController;
 use App\Http\Controllers\api\OrderController;
 use App\Http\Controllers\api\ProductController;
+use Illuminate\Support\Facades\DB;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
